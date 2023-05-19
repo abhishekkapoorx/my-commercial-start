@@ -65,10 +65,13 @@
             </div>
         </div>
     </div>
+
+    <div class="fb-comments my-4" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.postId}}" data-width="" data-numposts="5"></div>
 </div>
 {% endblock body %}
 
 <!-- JS -->
 {% block js %}
-
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v16.0" nonce="b832OhP2"></script>
 {% endblock js %}
