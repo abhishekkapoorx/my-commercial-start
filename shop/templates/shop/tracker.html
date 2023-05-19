@@ -1,0 +1,93 @@
+{% extends 'shop/base.html' %}
+{% block title %}My Commercial Start Tracker{% endblock title %}
+
+<!-- CSS -->
+{% block css %}
+
+{% endblock css %}
+
+<!-- Main Body -->
+{% block body %}
+
+
+<div class="container">
+    <div id="tracker" class="my-4">
+        <h1 class="text-capitalize">My Commercial Start Tracker - Enter Email address and order id</h1>
+
+        <form class="row g-3 align-items-center justify-content-center mt-4" method="post" target="/shop/tracker/" id="trackerForm">
+            {% csrf_token %}
+            <div class="col-md-6">
+                <label for="orderId" class="form-label">Order Id</label>
+                <input type="number" class="form-control" id="orderId" name="orderId" placeholder="Order Id" min="0">
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email Id</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email Id">
+            </div>
+            <div class="col-md-1 align-self-center">
+                <button type="submit" class="btn btn-outline-dark" id="submit">Submit</button>
+            </div>
+        </form>
+
+
+    </div>
+
+    <div id="details" class="my-4">
+        <h1 class="text-capitalize">Order Details</h1>
+        <ul class="list-group my-4" id="updates">
+
+        </ul>
+    </div>
+</div>
+
+{% endblock body %}
+
+<!-- JavaScript -->
+{% block js %}
+    {% load static %}
+    <script src="{% static 'shop/js/showCartonPages.js' %}"></script>
+
+<script>
+    document.getElementById("trackerForm").addEventListener("submit", async (event) => {
+        event.preventDefault()
+        document.getElementById("updates").innerHTML = "";
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        let formData = {
+            orderId: document.querySelector('[name=orderId]').value,
+            email: document.querySelector('[name=email]').value
+        }
+        // console.log(formData)
+
+        const response = await fetch('/shop/tracker/', {
+            headers: {'X-CSRFToken': csrftoken},
+            method: 'POST',
+            body: JSON.stringify(formData),
+            credentials: "include",
+            mode:"same-origin"
+        })
+        const jsonData = await response.json();
+
+        if (Object.keys(jsonData).length==0){
+            let updates = document.getElementById("updates");
+            let text = `<div class="alert alert-danger " role="alert">
+                There is no order to be tracked. Please check order id and email address and try again.
+              </div>`;
+            updates.innerHTML = text;
+        }
+        else{
+            for (let item in jsonData) {
+                let updates = document.getElementById("updates");
+                newItem = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${jsonData[item]["text"]}
+                        <span class="badge bg-dark rounded-pill">${jsonData[item]["date"]}</span>
+                    </li>`
+                updates.innerHTML += newItem;
+            };
+        };
+        // console.log(jsonData)
+
+
+
+    });
+</script>
+{% endblock js %}

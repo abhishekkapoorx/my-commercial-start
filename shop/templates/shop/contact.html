@@ -1,0 +1,41 @@
+{% extends 'shop/base.html' %}
+{% block title %}Contact{% endblock title %}
+
+<!-- CSS -->
+{% block css %}
+    
+{% endblock css %}
+
+<!-- Main Body -->
+{% block body %}
+    
+    <div class="container">
+        <h3 class="display-3 mt-3">Contact Us</h3>
+        <form action="/shop/contact/" method="POST" class="mt-4">{% csrf_token %}
+            <div class="mb-3">
+              <label for="contactName" class="form-label">Your Name</label>
+              <input type="text" class="form-control" id="contactName" name="name">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Your Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+              <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="contactPhone" class="form-label">Your Phone Number</label>
+                <input type="tel" class="form-control" id="contactPhone" name="phone">
+            </div>
+            <div class="mb-3">
+                <label for="contactDesc" class="form-label">What can we do for you?</label>
+                <textarea class="form-control" id="contactDesc" rows="3" name="desc"></textarea>
+            </div>
+            <button type="submit" class="btn btn-warning">Submit</button>
+          </form>
+    </div>
+{% endblock body %}
+
+<!-- JavaScript -->
+{% block js %}
+{% load static %}
+<script src="{% static 'shop/js/showCartonPages.js' %}"></script>
+{% endblock js %}

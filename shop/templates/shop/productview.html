@@ -1,0 +1,47 @@
+{% extends 'shop/base.html' %}
+{% block title %}Product View{% endblock title %}
+
+<!-- CSS -->
+{% block css %}
+
+{% endblock css %}
+
+<!-- Main Body -->
+{% block body %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-5 p-4">
+            <!-- <img src="/media/{{product.image}}" alt="{{ product.product_name }}" class="rounded mx-auto d-block img-thumbnail my-4"> -->
+            <!-- Modal Trigger and image -->
+            <button class="modal-img-trigger-btn" type="button" data-bs-target="#exampleModal"
+                data-bs-src="/media/{{product.image}}" data-bs-alt="{{product.product_name}}" data-bs-desc="{{product.desc}}"
+                data-bs-price="{{product.price}}" data-bs-toggle="modal">
+                <img src="/media/{{product.image}}" class="card-img-top" alt="{{product.product_name}}">
+            </button>
+            <div class="container m-4 d-flex justify-content-evenly">
+                <button type="button" class="btn btn-dark">Buy Now</button>
+                <div id="divpr-{{product.id}}">
+                    <button class="btn btn-dark cart" onclick="addCart(this.id)" id="pr-{{product.id}}">Add to Cart</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-7 p-4">
+            <div class="h1" id="namepr-{{product.id}}">{{ product.product_name }}</div>
+            <div class="h3">Price - &#x20B9;<span id="pricepr-{{product.id}}">{{ product.price }}</span></div>
+            <div class="h6">Date Published: {{ product.pub_date }}</div>
+            <div class="">{{ product.desc }}</div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+
+<!-- JavaScript -->
+{% block js %}
+{% load static %}
+<script src="{% static 'shop/js/showCartonPages.js' %}"></script>
+{% endblock js %}

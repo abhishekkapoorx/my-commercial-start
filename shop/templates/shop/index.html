@@ -1,0 +1,237 @@
+{% extends 'shop/base.html' %}
+{% block title %}Shop Home{% endblock title %}
+{% block css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+    }
+
+    :root {
+        --card-img-max-w-h: 235px;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .carousel-indicators {
+        bottom: -55px;
+    }
+
+    .carousel-dark .carousel-control-next-icon,
+    .carousel-dark .carousel-control-prev-icon {
+        padding: 32px 21px;
+        box-sizing: border-box;
+        border-radius: 15px;
+        box-shadow: 0px 0px 6px 0px white;
+        background-color: rgba(0, 0, 0, 0.500);
+    }
+
+    .carousel-control-next {
+        right: -8rem;
+    }
+
+    .carousel-control-prev {
+        left: -8rem;
+    }
+
+    .card-img,
+    .card-img-top {
+        position: absolute;
+        top: 1rem;
+        right: 0;
+        left: 0;
+        max-width: var(--card-img-max-w-h);
+        max-height: var(--card-img-max-w-h);
+        margin: auto;
+    }
+
+    .card {
+        margin: 3px;
+        min-height: 495px;
+    }
+
+    .card-body {
+        position: absolute;
+        margin-top: 4px;
+        bottom: 0.5rem;
+        right: 0;
+        left: 0;
+    }
+
+    .modal-img-trigger-btn {
+        border: 0px;
+        cursor: pointer;
+    }
+
+    .modal-Img {
+        max-height: 92vh;
+        margin: 1rem auto;
+        display: block;
+    }
+
+    .carousel-control-next {
+        right: -14rem;
+    }
+    .carousel-control-prev {
+        left: -14rem;
+    }
+</style>
+{% endblock css %}
+{% block body %}
+
+
+<!-- Main Content Starts Here -->
+{% load static %}
+{% for product, range, nSlides in allProds %}
+<div class="container mt-4">
+    <h4 class="display-4 my-4">{{product.0.subcategory}}</h4>
+    <div id="carouselExampleDark{{forloop.counter}}" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleDark{{forloop.counter}}" data-bs-slide-to="0"
+                class="active" aria-current="true" aria-label="Slide 0"></button>
+            {% if nSlides > 1 and not nSlides <= 1 %} {% for i in range %} <button type="button"
+                data-bs-target="#carouselExampleDark{{forloop.parentloop.counter}}" data-bs-slide-to="{{i}}"
+                aria-label="Slide {{i}}"></button>
+                {% endfor %}
+                {% endif %}
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="7000">
+                <div class="row justify-content-evenly">
+
+                    {% for i in product %}
+                    <div class="col-sm-3 col-md-3 col-xs-3">
+                        <div class="card mx-auto" style="width: 18rem;">
+                            <!-- Modal Trigger and image -->
+                            <button class="modal-img-trigger-btn" type="button" data-bs-target="#exampleModal"
+                                data-bs-src="/media/{{i.image}}" data-bs-alt="{{i.product_name}}"
+                                data-bs-desc="{{i.desc}}" data-bs-price="{{i.price}}" data-bs-toggle="modal">
+                                <img src="/media/{{i.image}}" class="card-img-top" alt="{{i.product_name}}">
+                            </button>
+
+                            <div class="card-body">
+                                <!-- Product Name -->
+                                {% if i.product_name|length <= 40 %} <h5 class="card-title" id="namepr-{{i.id}}">{{i.product_name}}</h5>
+                                    {% else %}
+                                    <h5 class="card-title" id="namepr-{{i.id}}">{{i.product_name|slice:"0:40"}} ...</h5>
+                                    {% endif %}
+
+                                    <!-- Price -->
+                                    <p class="mx-0 my-0 mb-1"><strong>Price -</strong>
+                                        <small>&#x20B9;<span id="pricepr-{{i.id}}">{{i.price}}</span></small>
+                                    </p>
+
+                                    <!-- Product Description -->
+                                    {% if i.desc|length <= 85 %} <p class="card-text">{{i.desc}}</p>
+                                        {% else %}
+                                        <p class="card-text">{{i.desc|slice:"0:85"}} ...</p>
+                                        {% endif %}
+                                        <span id="divpr-{{i.id}}">
+                                            <button class="btn btn-dark cart" onclick="addCart(this.id)"
+                                                id="pr-{{i.id}}">Add to Cart</button>
+                                        </span>
+                                        <button class="btn btn-dark cart" onclick="productView(this.id)"
+                                            id="pv-{{i.id}}">Product View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="6000">
+                <div class="row justify-content-evenly">
+                    {% endif %}
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {% if nSlides > 1 and not nSlides <= 1 %} <button class="carousel-control-prev" type="button"
+            data-bs-target="#carouselExampleDark{{forloop.counter}}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark{{forloop.counter}}"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+            {% endif %}
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock body %}
+
+{% block js %}
+<script src="{% static 'shop/js/script.js' %}"></script>
+<!-- <script>
+    if (localStorage.getItem("cart") == null) {
+        var cart = {};
+        // Display Cart Items
+        showCartItems(cart)
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem("cart"));
+        // Display Cart Items
+        showCartItems(cart)
+    };
+
+    // If the add to cart button is clicked, add/increment the item
+    function addCart(itsId) {
+        console.log(itsId)
+        if (cart[itsId] != undefined) {
+            cart[itsId] = cart[itsId] + 1;
+        }
+        else {
+            cart[itsId] = 1;
+        };
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Display Cart Items
+        showCartItems(cart)
+    };
+
+    // Show Cart Items
+    function showCartItems(cart) {
+        let cartItems = 0;
+        for (let value of Object.values(cart)) {
+            cartItems += value;
+        };
+        document.getElementById('cart-items').innerText = cartItems;
+    };
+
+    // Update The Cart
+    function updateCart(cart) {
+        for (var item in cart) {
+            document.getElementById(`div${item}`).innerHTML = `<button id="minus${item}"" class="btn btn-dark">-</button>
+                    <span id="val${item}"></span>`
+                };
+            };
+            
+    // Pop Cart
+    const popCart = document.getElementById('popcart');
+    const popover = new bootstrap.Popover(popCart, {
+          content: "<h4>My Cart Items</h4>"
+        }
+    );
+
+    // Product View
+    function productView(itsId){
+        window.location = `productview/${itsId.slice(3,)}`
+    }
+    
+</script> -->
+
+
+
+
+
+{% endblock js %}

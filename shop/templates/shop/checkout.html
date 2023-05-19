@@ -1,0 +1,122 @@
+{% extends 'shop/base.html' %}
+{% block title %}Checkout{% endblock title %}
+
+<!-- CSS -->
+{% block css %}
+
+{% endblock css %}
+
+<!-- Main Body -->
+{% block body %}
+
+<div class="container">
+    <div id="items" class="my-4">
+        <h1 class="text-capitalize">Step 1: My Commercial Start express Checkout - Review your cart items</h1>
+
+        <ul class="list-group my-4" id="cartList">
+            
+        </ul>
+    </div>
+
+    <div id="details" class="my-4">
+        <h1 class="text-capitalize">Step 2: Enter address and other details</h1>
+        <form class="row g-3" method="post" target="/shop/checkout/">{% csrf_token %}
+            <input type="hidden" id="items_JSON" name="items_JSON">
+            <div class="col-md-6">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="col-12">
+                <label for="address1" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address1" placeholder="1234 Main St" name="address1">
+            </div>
+            <div class="col-12">
+                <label for="address2" class="form-label">Address Line 2</label>
+                <input type="text" class="form-control" id="address2" placeholder="Apartment, studio, or floor" name="address2">
+            </div>
+            <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" name="city">
+            </div>
+            <div class="col-md-4">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" id="state" name="state">
+            </div>
+            <div class="col-md-2">
+                <label for="zip" class="form-label">Zip</label>
+                <input type="number" class="form-control" id="zip" name="zip">
+            </div>
+            <div class="col-md-12">
+                <label for="phone" class="form-label">Phone No.</label>
+                <input type="tel" class="form-control" id="phone" name="phone">
+            </div>
+            <!-- <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck">
+                    <label class="form-check-label" for="gridCheck">
+                        Check me out
+                    </label>
+                </div>
+            </div> -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-outline-dark" id="submit">Submit</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock body %}
+
+<!-- JavaScript -->
+{% block js %}
+
+{% if thank %}
+<script>
+    alert("Thanks for ordering with us. Your order id is: {{id}}. Use it to track your order.")
+    localStorage.clear()
+    window.location = "/shop/"
+</script>
+{% endif %}
+
+
+
+{% load static %}
+<script src="{% static 'shop/js/showCartonPages.js' %}"></script>
+
+<script>
+    if (Object.keys(cart).length==0){
+        let cartList = document.getElementById("cartList");
+        let text = `<div class="alert alert-danger " role="alert">
+            Your cart is empty, please add some items before checking out..!
+          </div>`;
+        cartList.innerHTML += text;
+        document.getElementById("submit").setAttribute("disabled", true)
+    }
+    else{
+        let total = 0
+        for (let item in cart) {
+            let cartList = document.getElementById("cartList");
+            let newItem = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${cart[item][1]}
+                    <span>
+                        <span class="badge bg-dark rounded-pill">${cart[item][0]}</span>
+                        <span class="badge bg-dark rounded-pill">&#x20B9; ${cart[item][0]*cart[item][2]}</span>
+                    </span>
+                </li>`
+            cartList.innerHTML += newItem;
+            total += cart[item][0]*cart[item][2]
+        };
+        let text = `<div class="alert alert-success " role="alert">
+            Your Grand Total is: <b>&#x20B9;${total}</b>
+          </div>`;
+        document.getElementById("items").innerHTML += text;
+        document.getElementById("items_JSON").setAttribute("value", JSON.stringify(cart))
+    };
+    
+</script>
+{% endblock js %}
