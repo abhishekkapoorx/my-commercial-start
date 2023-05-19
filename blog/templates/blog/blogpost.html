@@ -11,33 +11,29 @@
 {% block body %}
 <div class="container my-4">
     <div class="row g-5 ">
+        {% autoescape off %}
         <div class="col-md-8">
             <h3 class="pb-4 mb-4 fst-italic border-bottom">
-                From the Firehose
+                {{post.title}}
             </h3>
 
             <article class="blog-post">
-                <h2 class="blog-post-title mb-1">Sample blog post</h2>
-                <p class="blog-post-meta">January 1, 2021 by <a href="#">Mark</a></p>
+                <h2 class="blog-post-title mb-1">{{post.head0}}</h2>
+                <p class="blog-post-meta">{{post.pub_date}}</p>
 
                 <p>
-                    This blog post shows a few different types of content that’s supported and styled with Bootstrap.
-                    Basic typography, lists, tables, images, code, and more are all supported as expected.
+                    {{post.cHead0}}
                 </p>
 
 
-                <h2>Heading</h2>
+                <h2>{{post.head1}}</h2>
                 <p>
-                    This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.
+                    {{post.cHead1}}
                 </p>
 
-                <h3>Sub-heading</h3>
+                <h3>{{post.head2}}</h3>
                 <p>
-                    This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.
+                    {{post.cHead2}}
                 </p>
             </article>
 
@@ -48,6 +44,8 @@
             </nav>
 
         </div>
+        {% endautoescape %}
+
 
         <div class="col-md-4">
             <div class="position-sticky" style="top: 2rem;">
