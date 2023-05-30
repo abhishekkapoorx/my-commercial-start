@@ -1,3 +1,4 @@
+from re import L
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse  # For testing the app routing
 from shop.models import Product, Contact, Order, OrderUpdate
@@ -20,6 +21,32 @@ def index(request):
     params={'allProds':allProds }
     return render(request,"shop/index.html", params)
 
+def searchMatch(query, item):
+    # if query in item.desc.lower() or query in item.product_name.lower() or query in item.category.lower() or query in item.subcategory.lower():
+    if query.lower() in (item.desc.lower() or item.product_name.lower() or item.category.lower() or item.subcategory.lower()):
+        return True
+    else:
+        return False
+
+
+def search(request):
+    query = request.GET.get('search')
+    allProds = []
+    subcatprods = Product.objects.values('subcategory', 'id')
+    subcats = {item["subcategory"] for item in subcatprods}
+    for subcat in subcats:
+        prodTemp = Product.objects.filter(subcategory=subcat)
+        prod = [item for item in prodTemp if searchMatch(query , item)]
+        n = len(prod)
+        nSlides = n // 4 + ceil((n / 4) - (n // 4))
+        if len(prod)!=0:
+            allProds.append([prod, range(1, nSlides), nSlides])
+
+    params={'allProds': allProds, "msg":""}
+    if len(allProds)==0 or len(query)==0:
+        params = {'msg': "No Search result found. Please try another query."}
+
+    return render(request,"shop/search.html", params)
 
 def about(request):
     return render(request, "shop/about.html")
@@ -66,9 +93,6 @@ def tracker(request):
             return HttpResponse("{}")
     return render(request, "shop/tracker.html")
 
-
-def search(request):
-    return render(request, "shop/search.html")
 
 
 def productView(request, myid):
